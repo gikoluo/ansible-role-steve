@@ -1,0 +1,41 @@
+---
+
+- stat:
+    path: "{{ steve_local_file }}"
+  register: st
+
+- debug: msg="Download {{ steve_url }} to {{ steve_local_file }}"
+
+- name: Delete file when force
+  file: 
+    path: "{{ steve_local_file }}"
+    state: absent
+  when: force_update == true
+  delegate_to: localhost
+  become: false
+
+- name: get Steve file
+  get_url:
+    url:     "{{ steve_url }}"
+    dest:    "{{ steve_local_file }}"
+    mode:    0644
+  when: not st.stat.exists
+  delegate_to: localhost
+  become: false
+
+- name: lsof is present
+  package: name=lsof state=present
+
+- name: Create config path
+  file: path=/etc/steve state=directory owner=root group=root mode=0755
+
+- name: Files are copied
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  with_items: "{{ files }}"
+  become: True
+  become_user: root
+  tags: [steve]
+
