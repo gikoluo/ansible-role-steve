@@ -11,6 +11,7 @@
     path: "{{ steve_local_file }}"
     state: absent
   when: force_update == true
+  run_once: true
   delegate_to: localhost
   become: false
 
