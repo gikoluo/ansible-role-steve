@@ -16,7 +16,7 @@ install:
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
 
 script:
-  - "chmod 0777 ./files"
+  - "mkdir -p ./tests/files"
   - "ls -R"
   # Check the role/playbook's syntax.
   - "ansible-playbook -i tests/inventory tests/$SITE --syntax-check"
