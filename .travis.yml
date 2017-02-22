@@ -17,6 +17,7 @@ install:
 
 script:
   - "chmod 0777 ./files"
+  - "ls -R"
   # Check the role/playbook's syntax.
   - "ansible-playbook -i tests/inventory tests/$SITE --syntax-check"
 
