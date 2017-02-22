@@ -4,8 +4,6 @@
     path: "{{ steve_local_file }}"
   register: st
 
-- debug: msg="Download {{ steve_url }} to {{ steve_local_file }}"
-
 - name: Delete file when force
   file: 
     path: "{{ steve_local_file }}"
