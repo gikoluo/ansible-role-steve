@@ -1,4 +1,4 @@
-steve_local_file: "./files/steve.sh"
+steve_local_file: "files/steve.sh"
 steve_target: "/usr/bin/steve"
 steve_url: "https://raw.githubusercontent.com/gikoluo/Steve/master/sa/steve.sh"
 force_update: false
