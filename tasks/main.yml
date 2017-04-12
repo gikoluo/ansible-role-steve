@@ -25,8 +25,30 @@
 - name: lsof is present
   package: name=lsof state=present
 
+
+- name: Create log path
+  file: path="{{steve_log_dir}}" state=directory owner=root group=root mode=0755
+  when: steve_log_dir != "/var/log"
+
+- name: Log Dir in steve env
+  file: path="{{steve_log_dir}}" state=directory owner=root group=root mode=0755
+  when: steve_log_dir != "/var/log"
+
 - name: Create config path
-  file: path=/etc/steve state=directory owner=root group=root mode=0755
+  file: path={{steve_conf_dir}} state=directory owner=root group=root mode=0755
+
+- stat: path="{{steve_conf_dir}}/.setenv.sh"
+  register: p
+
+- name: create fake 'config env file'
+  file: path="{{steve_conf_dir}}/.setenv.sh" state=touch owner=root group=root mode=0755
+  when: p.stat.exists is defined and not p.stat.exists
+
+- name: Write config env
+  lineinfile:
+    dest: "{{steve_conf_dir}}/.setenv.sh"
+    regexp: '^STEVE_OUT='
+    line: "STEVE_OUT={{steve_log_dir}}/steve.log"
 
 - name: Files are copied
   copy:
@@ -34,7 +56,5 @@
     dest: "{{ item.dest }}"
     mode: "{{ item.mode }}"
   with_items: "{{ files }}"
-  become: True
-  become_user: root
-  tags: [steve]
+
 
